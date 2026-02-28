@@ -12,8 +12,8 @@ where customers can order customizable burgers for carry-out or delivery.
 |---|---|---|
 | Gregory Treihart | `gregory-branch` | Carry-Out Info, Carry-Out Order Review, Carry-Out Order Complete |
 | Allan Hernandez | *(ask Allan)* | Delivery Address, Delivery Order Review, Delivery Order Complete |
-| Hennysa Omoregie | *(ask Henny)* | Home Page, Menu Page, Order Online Page, Choose Ingredients Page |
-| Laurelle Sekpe | *(ask Laurelle)* | Home Page, Menu Page, Order Online Page, Choose Ingredients Page |
+| Hennysa Omoregie | `henny` | Home Page, Menu Page |
+| Laurelle Sekpe | *(ask Laurelle)* | Order Online Page, Choose Ingredients Page |
 
 ---
 
@@ -122,18 +122,6 @@ git push origin your-branch-name
 
 ---
 
-## 💬 Team Communication
-
-**Discord Server:** *(Add your Discord server link or name here)*
-
-Please use Discord for:
-- Letting the group know when you have pushed new changes
-- Asking questions about how your pages connect to a teammate's pages
-- Flagging any bugs or issues you find
-- Coordinating with Gregory before opening a Pull Request to main
-
----
-
 ## 🔗 Connecting Pages Across Teammates
 
 ### Henny & Laurelle → Gregory and Allan
@@ -160,10 +148,10 @@ Update this table as pages get completed and merged into main.
 
 | Page | Owner | Status |
 |---|---|---|
-| Home Page | Henny & Laurelle | ⬜ Not started |
-| Menu Page | Henny & Laurelle | ⬜ Not started |
-| Order Online | Henny & Laurelle | ⬜ Not started |
-| Choose Ingredients | Henny & Laurelle | ⬜ Not started |
+| Home Page | Henny | ✅ Complete |
+| Menu Page | Henny | ⬜ Not started |
+| Order Online | Laurelle | ⬜ Not started |
+| Choose Ingredients | Laurelle | ⬜ Not started |
 | Carry-Out Info | Gregory | ✅ Complete |
 | Carry-Out Order Review | Gregory | ✅ Complete |
 | Carry-Out Order Complete | Gregory | ✅ Complete |
