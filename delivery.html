@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Burger</title>
+<link href="https://fonts.googleapis.com/css2?family=Speedee:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --mcd-yellow: #FFC72C;
+    --dd-red: #FF3008;
+    --text-dark: #1a1a1a;
+    --text-mid: #444;
+    --text-light: #888;
+    --border: #e0e0e0;
+    --bg: #ffffff;
+    --input-bg: #f5f5f5;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text-dark);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 32px;
+    border-bottom: 1px solid var(--border);
+    background: white;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .mcd-logo {
+    width: 52px;
+    height: 52px;
+  }
+
+  .powered-by {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .powered-by span {
+    font-size: 10px;
+    color: var(--text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 500;
+  }
+
+  .dd-logo {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--dd-red);
+    letter-spacing: -0.01em;
+  }
+
+  .dd-logo svg { width: 16px; height: 16px; }
+
+  /* LAYOUT: split view */
+  .layout {
+    display: flex;
+    min-height: calc(100vh - 73px);
+  }
+
+  /* LEFT PANEL */
+  .left-panel {
+    width: 480px;
+    flex-shrink: 0;
+    padding: 40px 36px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  /* Step indicator */
+  .steps {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .step {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    border: 2px solid var(--border);
+    color: var(--text-light);
+  }
+
+  .step.active {
+    background: var(--mcd-yellow);
+    border-color: var(--mcd-yellow);
+    color: var(--text-dark);
+  }
+
+  .step.done {
+    background: var(--text-dark);
+    border-color: var(--text-dark);
+    color: white;
+  }
+
+  .step-line {
+    flex: 1;
+    height: 2px;
+    background: var(--border);
+    border-radius: 2px;
+  }
+
+  .step-line.done { background: var(--text-dark); }
+
+  /* Address section */
+  .section-title {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--text-dark);
+  }
+
+  .section-subtitle {
+    font-size: 13px;
+    color: var(--text-light);
+    margin-top: 4px;
+    line-height: 1.5;
+  }
+
+  .location-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #fff8e6;
+    border: 1.5px solid var(--mcd-yellow);
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-dark);
+  }
+
+  .location-badge svg { color: var(--dd-red); flex-shrink: 0; }
+
+  /* Input group */
+  .input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .input-label {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-mid);
+  }
+
+  .input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .input-wrapper svg {
+    position: absolute;
+    left: 14px;
+    color: var(--text-light);
+    pointer-events: none;
+  }
+
+  input[type="text"], textarea {
+    width: 100%;
+    background: var(--input-bg);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px 14px 44px;
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--text-dark);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  input[type="text"]:focus, textarea:focus {
+    border-color: var(--mcd-yellow);
+    box-shadow: 0 0 0 3px rgba(255, 199, 44, 0.15);
+    background: white;
+  }
+
+  input[type="text"]::placeholder, textarea::placeholder {
+    color: #aaa;
+  }
+
+  .apt-input { padding-left: 16px !important; }
+
+  /* Dropoff options */
+  .dropoff-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-dark);
+  }
+
+  .radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .radio-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    user-select: none;
+  }
+
+  .radio-option:hover {
+    border-color: #ccc;
+    background: #fafafa;
+  }
+
+  .radio-option.selected {
+    border-color: var(--mcd-yellow);
+    background: #fffbf0;
+  }
+
+  .radio-circle {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: border-color 0.2s;
+  }
+
+  .radio-option.selected .radio-circle {
+    border-color: var(--mcd-yellow);
+  }
+
+  .radio-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--mcd-yellow);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .radio-option.selected .radio-dot { opacity: 1; }
+
+  .radio-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-dark);
+  }
+
+  /* Notes textarea */
+  .notes-wrapper { position: relative; }
+  
+  textarea {
+    padding-left: 16px !important;
+    resize: vertical;
+    min-height: 80px;
+    line-height: 1.5;
+  }
+
+  /* Buttons */
+  .btn-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 4px;
+  }
+
+  .btn {
+    flex: 1;
+    padding: 15px;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s;
+    letter-spacing: 0.01em;
+  }
+
+  .btn-cancel {
+    background: white;
+    color: var(--text-dark);
+    border: 1.5px solid var(--border);
+  }
+
+  .btn-cancel:hover {
+    background: var(--input-bg);
+  }
+
+  .btn-save {
+    background: var(--dd-red);
+    color: white;
+  }
+
+  .btn-save:hover {
+    background: #e02800;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(255, 48, 8, 0.35);
+  }
+
+  .btn-save:active { transform: translateY(0); }
+
+  /* RIGHT PANEL - Map */
+  .right-panel {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    background: #e8e4dc;
+  }
+
+  .map-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+
+  /* Fake map using CSS */
+  .map-bg {
+    width: 100%;
+    height: 100%;
+    background-color: #f0ebe0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Roads */
+  .road {
+    position: absolute;
+    background: white;
+    border-radius: 2px;
+  }
+
+  .road.horizontal { height: 8px; left: 0; right: 0; }
+  .road.vertical { width: 8px; top: 0; bottom: 0; }
+  .road.major { background: #f5c842; }
+  .road.highway { background: #f5c842; height: 18px; border-radius: 4px; }
+  .road.highway.vertical { width: 18px; }
+
+  /* Green area */
+  .green-area {
+    position: absolute;
+    background: #c8ddb0;
+    border-radius: 50%;
+  }
+
+  .water {
+    position: absolute;
+    background: #9dc9e8;
+    border-radius: 40%;
+  }
+
+  /* Blocks (buildings) */
+  .block {
+    position: absolute;
+    background: #e4ddd0;
+    border: 1px solid #d4ccc0;
+    border-radius: 2px;
+  }
+
+  /* Map pin */
+  .map-pin {
+    position: absolute;
+    bottom: calc(50% + 10px);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    animation: pin-drop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+
+  @keyframes pin-drop {
+    from { transform: translateX(-50%) translateY(-30px); opacity: 0; }
+    to { transform: translateX(-50%) translateY(0); opacity: 1; }
+  }
+
+  .pin-icon {
+    width: 44px;
+    height: 44px;
+    background: var(--text-dark);
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .pin-icon::after {
+    content: '';
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    background: white;
+    border-radius: 50%;
+  }
+
+  .pin-shadow {
+    width: 20px;
+    height: 6px;
+    background: rgba(0,0,0,0.15);
+    border-radius: 50%;
+    margin: 4px auto 0;
+    filter: blur(2px);
+  }
+
+  /* Mapbox attribution */
+  .map-attribution {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: white;
+    border-radius: 6px;
+    padding: 4px 8px;
+    font-size: 11px;
+    color: var(--text-light);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  }
+
+  .mapbox-logo {
+    font-weight: 700;
+    color: #333;
+    font-size: 11px;
+  }
+
+  /* Divider */
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 4px 0;
+  }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .layout { flex-direction: column; }
+    .right-panel { min-height: 300px; }
+    .left-panel { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <img src="burger.png" alt="Happy Burger logo" style="width: 44px; height: 44px; object-fit: contain; background: #000000; border-radius: 10px; padding: 6px;">
+  <span style="font-size: 24px; font-weight: 700; letter-spacing: -0.02em; color: var(--text-dark);">Happy Burger</span>
+</header>
+
+<!-- MAIN LAYOUT -->
+<div class="layout">
+
+  <!-- LEFT PANEL -->
+  <div class="left-panel">
+
+    <!-- Step indicator -->
+    <div class="steps">
+      <div class="step done">✓</div>
+      <div class="step-line done"></div>
+      <div class="step active">2</div>
+      <div class="step-line"></div>
+      <div class="step">3</div>
+    </div>
+
+    <!-- Address info -->
+    <div>
+      <div class="section-title">Confirm your address</div>
+      <div class="section-subtitle">We'll find the closest store that can deliver to you.</div>
+    </div>
+
+    <!-- Location badge -->
+    <div class="location-badge">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+        <circle cx="12" cy="9" r="2.5"/>
+      </svg>
+      Omaha, NE, USA
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Apt input -->
+    <div class="input-group">
+      <label class="input-label">Apartment / Suite</label>
+      <input type="text" class="apt-input" placeholder="Enter your apartment number or suite">
+    </div>
+
+    <!-- Dropoff options -->
+    <div class="input-group">
+      <div class="dropoff-title">Drop-off Options</div>
+      <div class="radio-group">
+        <div class="radio-option" onclick="selectOption(this)">
+          <div class="radio-circle"><div class="radio-dot"></div></div>
+          <span class="radio-label">Hand it to me</span>
+        </div>
+        <div class="radio-option selected" onclick="selectOption(this)">
+          <div class="radio-circle"><div class="radio-dot"></div></div>
+          <span class="radio-label">Leave it at my door</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notes -->
+    <div class="input-group">
+      <label class="input-label">Delivery Instructions (optional)</label>
+      <textarea placeholder="e.g. ring the bell after dropoff, leave next to the porch, call upon arrival, etc."></textarea>
+    </div>
+
+    <!-- Buttons -->
+    <div class="btn-group">
+      <button class="btn btn-cancel">Cancel</button>
+      <button class="btn btn-save">Save &amp; Continue</button>
+    </div>
+
+  </div>
+
+  <!-- RIGHT PANEL: Map -->
+  <div class="right-panel">
+    <div class="map-bg">
+
+      <!-- Faux map tiles using CSS shapes -->
+      <!-- Green areas -->
+      <div class="green-area" style="width:180px;height:140px;top:35%;left:10%;"></div>
+      <div class="green-area" style="width:100px;height:80px;top:60%;left:35%;border-radius:40%;background:#b8d09c;"></div>
+
+      <!-- Water (Regency Lake) -->
+      <div class="water" style="width:140px;height:90px;top:42%;left:8%;"></div>
+
+      <!-- Horizontal roads -->
+      <div class="road horizontal" style="top:12%;height:18px;background:#f5c842;opacity:0.9;"></div>
+      <div class="road horizontal" style="top:28%;height:6px;"></div>
+      <div class="road horizontal" style="top:48%;height:6px;"></div>
+      <div class="road horizontal" style="top:63%;height:6px;"></div>
+      <div class="road horizontal" style="top:74%;height:10px;background:#f5d560;"></div>
+      <div class="road horizontal" style="top:88%;height:6px;"></div>
+
+      <!-- Vertical roads -->
+      <div class="road vertical" style="left:30%;width:6px;"></div>
+      <div class="road vertical" style="left:50%;width:6px;"></div>
+      <div class="road vertical" style="left:65%;width:6px;"></div>
+      <div class="road vertical" style="left:78%;width:6px;"></div>
+      <div class="road vertical" style="left:90%;width:6px;"></div>
+
+      <!-- Highway curve (orange freeway) -->
+      <div style="position:absolute;top:0;left:18%;width:12%;height:60%;background:transparent;border-right:18px solid #f0a020;border-radius:0 0 60px 0;opacity:0.85;"></div>
+
+      <!-- City blocks -->
+      <div class="block" style="top:20%;left:52%;width:9%;height:6%;"></div>
+      <div class="block" style="top:20%;left:63%;width:8%;height:6%;"></div>
+      <div class="block" style="top:20%;left:73%;width:7%;height:6%;"></div>
+      <div class="block" style="top:30%;left:52%;width:9%;height:12%;"></div>
+      <div class="block" style="top:30%;left:67%;width:10%;height:12%;"></div>
+      <div class="block" style="top:50%;left:52%;width:9%;height:10%;"></div>
+      <div class="block" style="top:50%;left:67%;width:10%;height:10%;"></div>
+      <div class="block" style="top:78%;left:35%;width:9%;height:8%;"></div>
+      <div class="block" style="top:78%;left:52%;width:9%;height:8%;"></div>
+      <div class="block" style="top:78%;left:67%;width:10%;height:8%;"></div>
+      <div class="block" style="top:78%;left:79%;width:7%;height:8%;"></div>
+
+      <!-- Map pin (home) -->
+      <div class="map-pin" style="left:72%;bottom:43%;">
+        <div class="pin-icon"></div>
+        <div class="pin-shadow"></div>
+      </div>
+
+      <!-- Mapbox attribution -->
+      <div class="map-attribution">
+        <span>© </span>
+        <span class="mapbox-logo">mapbox</span>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function selectOption(el) {
+    document.querySelectorAll('.radio-option').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+</script>
+
+</body>
+</html>
