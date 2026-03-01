@@ -26,74 +26,9 @@
     min-height: 100vh;
   }
 
-  /* HEADER */
-  header {
-    background: var(--red);
-    padding: 18px 24px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    box-shadow: 0 2px 12px rgba(218,41,28,0.3);
-  }
-
-  header h1 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 32px;
-    color: var(--yellow);
-    letter-spacing: 2px;
-    line-height: 1;
-  }
-
-  header .subtitle {
-    color: rgba(255,255,255,0.85);
-    font-size: 13px;
-    font-weight: 500;
-  }
-
-  .header-left { display: flex; flex-direction: column; gap: 2px; }
-
-  .cart-icon-btn {
-    position: relative;
-    background: rgba(255,255,255,0.15);
-    border: 2px solid rgba(255,255,255,0.3);
-    border-radius: 12px;
-    width: 48px;
-    height: 48px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.2s;
-    font-size: 22px;
-  }
-  .cart-icon-btn:hover { background: rgba(255,255,255,0.25); transform: scale(1.05); }
-
-  .cart-badge {
-    position: absolute;
-    top: -8px;
-    right: -8px;
-    background: var(--yellow);
-    color: var(--dark);
-    font-size: 11px;
-    font-weight: 700;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transform: scale(0);
-    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  }
-  .cart-badge.visible { opacity: 1; transform: scale(1); }
-
   /* BURGER PREVIEW */
   .preview-section {
-    background: var(--card);
+    background: #e8e0d0;
     border-bottom: 2px solid var(--border);
     padding: 28px 24px 20px;
     display: flex;
@@ -176,12 +111,18 @@
   @media (max-width: 640px) { .toppings-grid { grid-template-columns: 1fr; } .panel.full-width { grid-column: 1; } }
 
   /* FOOTER */
-  .footer-bar { position: fixed; bottom: 0; left: 0; right: 0; background: var(--card); border-top: 2px solid var(--border); padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; gap: 12px; z-index: 100; box-shadow: 0 -4px 20px rgba(0,0,0,0.08); }
+  .footer-bar {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: var(--card); border-top: 2px solid var(--border);
+    padding: 16px 24px;
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    z-index: 100; box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
+  }
   .footer-total { display: flex; flex-direction: column; gap: 2px; }
   .footer-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); font-weight: 600; }
   .footer-amount { font-family: 'Bebas Neue', sans-serif; font-size: 28px; color: var(--dark); letter-spacing: 1px; line-height: 1; }
   .footer-calories { font-size: 13px; color: var(--muted); font-weight: 500; }
-  .footer-actions { display: flex; gap: 10px; }
+  .footer-actions { display: flex; align-items: center; gap: 10px; }
   .btn { padding: 12px 20px; border-radius: 8px; font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 14px; cursor: pointer; border: none; transition: all 0.15s; white-space: nowrap; }
   .btn-ghost { background: #f0ebe0; color: var(--text); }
   .btn-ghost:hover { background: #e0d8c8; }
@@ -190,11 +131,49 @@
   .btn-primary { background: var(--red); color: white; padding: 12px 28px; }
   .btn-primary:hover { background: #c02018; transform: translateY(-1px); }
 
+  /* CART ICON IN FOOTER */
+  .cart-icon-btn {
+    position: relative;
+    background: var(--dark);
+    border: none;
+    border-radius: 12px;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .cart-icon-btn:hover { background: #333; transform: scale(1.05); }
+
+  .cart-badge {
+    position: absolute;
+    top: -7px;
+    right: -7px;
+    background: var(--yellow);
+    color: var(--dark);
+    font-size: 11px;
+    font-weight: 700;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: scale(0);
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  .cart-badge.visible { opacity: 1; transform: scale(1); }
+
   /* TOAST */
   .toast { position: fixed; top: 80px; left: 50%; transform: translateX(-50%) translateY(-20px); background: var(--dark); color: white; padding: 12px 24px; border-radius: 100px; font-size: 14px; font-weight: 500; opacity: 0; pointer-events: none; transition: all 0.3s; z-index: 400; white-space: nowrap; }
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-  /* ── CART PAGE ── */
+  /* CART PAGE */
   .cart-page {
     position: fixed; inset: 0; background: #f5f0e8;
     z-index: 200;
@@ -237,7 +216,6 @@
   }
   .cart-burger-mini { display: flex; flex-direction: column; align-items: center; gap: 2px; }
   .cb-bun-top { width: 64px; height: 20px; background: linear-gradient(180deg, #e8a020 0%, #f5c050 60%); border-radius: 40px 40px 4px 4px; border-bottom: 2px solid #c8881a; }
-  .cb-bun-top.sesame { position: relative; }
   .cb-bun-top.lettuce { background: linear-gradient(180deg, #5a9a40, #7ac055); border-bottom-color: #4a8030; }
   .cb-patty { width: 60px; height: 8px; background: #6b3a1f; border-radius: 3px; border-top: 1.5px solid #8b5030; }
   .cb-patty.impossible { background: #4a7040; }
@@ -274,20 +252,59 @@
   .fulfillment-btn.pickup:hover { background: #c02018; transform: translateY(-1px); }
   .fulfillment-btn.delivery { background: #6b7280; color: white; }
   .fulfillment-btn.delivery:hover { background: #4b5563; transform: translateY(-1px); }
+
+  /* NAV TABLE */
+  .nav-link { text-decoration: none; color: #C20830; }
+  .nav-link:hover { text-decoration: underline; }
 </style>
 </head>
 <body>
 
-<header>
-  <div class="header-left">
-    <h1>Build-a-Burger®</h1>
-    <span class="subtitle">Customize your perfect burger</span>
-  </div>
-  <button class="cart-icon-btn" onclick="openCart()" aria-label="View cart">
-    🛒
-    <span class="cart-badge" id="cartBadge">0</span>
-  </button>
-</header>
+<!--Header Stuff-->
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tbody>
+    <tr>
+      <img src="/images/divider.png" style="width:100%; height:3px; display:block;" alt="">
+    </tr>
+
+    <tr>
+      <td width="28" rowspan="2" bgcolor="#FFFFFF">&nbsp;</td>
+      <td width="186" rowspan="2" bgcolor="#FFFFFF">
+        <a href="/index.html">
+          <img src="/images/logo_v2.png" width="150" height="100" alt=""/>
+        </a>
+      </td>
+      <td width="282" height="42" bgcolor="#FFFFFF" style="font-size: 36px">&nbsp;</td>
+      <td width="119" bgcolor="#FFFFFF" style="font-size: 36px">&nbsp;</td>
+      <td width="237" bgcolor="#FFFFFF" style="font-size: 36px">&nbsp;</td>
+      <td colspan="2" align="right" valign="bottom" bgcolor="#FFFFFF" style="font-size: 24px; color: #C20830; font-family: Cambria, 'Hoefler Text', 'Liberation Serif', Times, 'Times New Roman', serif;"><strong>⌕ SEARCH</strong></td>
+      <td width="41" align="right" valign="bottom" bgcolor="#FFFFFF" style="font-size: 24px">&nbsp;</td>
+    </tr>
+	
+    <tr>
+      <td height="67" align="right" valign="middle" bgcolor="#FFFFFF" style="font-size: 30px; font-family: Cambria, 'Hoefler Text', 'Liberation Serif', Times, serif;">
+      <a href="#" class="nav-link full-cell"><strong>LOCATIONS</strong></a>
+      </td>
+      <td align="right" valign="middle" bgcolor="#FFFFFF" style="font-size: 30px; font-family: Cambria, 'Hoefler Text', 'Liberation Serif', Times, serif;">
+      <a href="menu/index.html" class="nav-link full-cell"><strong>MENU</strong></a>
+      </td>
+      <td align="right" valign="middle" bgcolor="#FFFFFF" style="font-size: 30px; font-family: Cambria, 'Hoefler Text', 'Liberation Serif', Times, serif;">
+      <a href="#" class="nav-link full-cell"><strong>EMPLOYMENT</strong></a>
+      </td>
+      <td width="172" align="right" valign="middle" bgcolor="#FFFFFF" style="font-size: 30px; font-family: Cambria, 'Hoefler Text', 'Liberation Serif', Times, serif;">
+      <a href="#" class="nav-link full-cell"><strong>HISTORY</strong></a>
+      </td>
+      <td width="135" align="right" valign="middle" bgcolor="#FFFFFF" style="font-size: 30px; font-family: Cambria, 'Hoefler Text', 'Liberation Serif', Times, serif;">
+      <a href="#" class="nav-link full-cell"><strong>ABOUT</strong></a>
+      </td>
+      <td bgcolor="#FFFFFF">&nbsp;</td>
+    </tr>
+	
+    <tr>
+      <td height="3" colspan="8"><img src="images/divider.png" style="width:100%; height:3px; display:block;" alt=""></td>
+    </tr>
+  </tbody>
+</table>
 
 <!-- Burger Preview -->
 <div class="preview-section">
@@ -350,7 +367,7 @@
   </div>
 </main>
 
-<!-- Footer Bar -->
+<!-- Footer Bar — cart icon lives here now -->
 <div class="footer-bar">
   <div class="footer-total">
     <div class="footer-label">Order Total</div>
@@ -361,6 +378,10 @@
     <button class="btn btn-outline" onclick="resetOptions()">Reset</button>
     <button class="btn btn-ghost" onclick="cancelOrder()">Cancel</button>
     <button class="btn btn-primary" onclick="addToCart()">Add to Cart</button>
+    <button class="cart-icon-btn" onclick="openCart()" aria-label="View cart">
+      🛒
+      <span class="cart-badge" id="cartBadge">0</span>
+    </button>
   </div>
 </div>
 
@@ -383,7 +404,7 @@
       <span class="cart-total-val" id="cartTotalVal">$0.00</span>
     </div>
     <div class="pickup-delivery-label">Choose how to get your order:</div>
-    <button class="fulfillment-btn pickup" onclick="placeOrder('Pickup')">Pickup</button>
+    <button class="fulfillment-btn pickup" onclick="placeOrder('Carryout')">Carryout</button>
     <button class="fulfillment-btn delivery" onclick="placeOrder('Delivery')">Delivery</button>
   </div>
 </div>
@@ -447,19 +468,20 @@
   function addToCart() {
     let total = 0, cals = 0;
     document.querySelectorAll('.option-row.selected').forEach(row => { total += getPrice(row); cals += getCal(row); });
-
     const patty = document.querySelector('[data-group="patty"].selected');
     const bun = document.querySelector('[data-group="bun"].selected');
     const toppings = [...document.querySelectorAll('[data-group="topping"].selected')].map(t => t.dataset.name);
     const hasCheese = toppings.some(t => t.includes('Cheese'));
     const bunName = bun ? bun.dataset.name : 'Standard Bun';
     const pattyName = patty ? patty.dataset.name : 'Beef Patty';
-    const isImpossible = pattyName.includes('Impossible');
-    const isChicken = pattyName.includes('Chicken');
-    const isLettuce = bunName.includes('Lettuce');
-    const isSesame = bunName.includes('Sesame');
-
-    cartItems.push({ name: pattyName + ' on ' + bunName, cal: cals, price: total, toppings, hasCheese, isImpossible, isChicken, isLettuce, isSesame, hasToppings: toppings.length > 0 });
+    cartItems.push({
+      name: pattyName + ' on ' + bunName, cal: cals, price: total, toppings, hasCheese,
+      isImpossible: pattyName.includes('Impossible'),
+      isChicken: pattyName.includes('Chicken'),
+      isLettuce: bunName.includes('Lettuce'),
+      isSesame: bunName.includes('Sesame'),
+      hasToppings: toppings.length > 0
+    });
     updateCartBadge();
     renderCartItems();
     showToast('Added to cart!');
@@ -475,7 +497,6 @@
     const body = document.getElementById('cartBody');
     const footer = document.getElementById('cartFooter');
     const empty = document.getElementById('cartEmpty');
-
     if (cartItems.length === 0) {
       body.innerHTML = '';
       body.appendChild(empty);
@@ -483,11 +504,9 @@
       footer.style.display = 'none';
       return;
     }
-
     let cartTotal = 0;
     body.innerHTML = '';
-
-    cartItems.forEach((item, idx) => {
+    cartItems.forEach(item => {
       cartTotal += item.price;
       const card = document.createElement('div');
       card.className = 'cart-item-card';
@@ -508,34 +527,30 @@
             ${item.toppings.length ? '<div class="cart-item-toppings">' + item.toppings.join(', ') + '</div>' : ''}
           </div>
           <div class="cart-item-price">$${item.price.toFixed(2)}</div>
-        </div>
-      `;
+        </div>`;
       body.appendChild(card);
     });
-
     const totalRow = document.createElement('div');
     totalRow.className = 'cart-total-row';
     totalRow.innerHTML = `<span class="cart-total-label">Total</span><span class="cart-total-val">$${cartTotal.toFixed(2)}</span>`;
     body.appendChild(totalRow);
-
     document.getElementById('cartTotalVal').textContent = '$' + cartTotal.toFixed(2);
     footer.style.display = 'flex';
   }
 
-  function openCart() {
-    document.getElementById('cartPage').classList.add('open');
-  }
-
-  function closeCart() {
-    document.getElementById('cartPage').classList.remove('open');
-  }
+  function openCart() { document.getElementById('cartPage').classList.add('open'); }
+  function closeCart() { document.getElementById('cartPage').classList.remove('open'); }
 
   function placeOrder(method) {
     showToast(method + ' order placed! 🎉');
     cartItems.length = 0;
     updateCartBadge();
     renderCartItems();
-    setTimeout(closeCart, 1200);
+    if (method === 'Carryout') {
+    setTimeout(() => { window.location.href = '/order/carryout/carryout-info.html'; }, 1200);
+  } else {
+    setTimeout(() => { window.location.href = '/order/delivery.html'; }, 1200);
+  }
   }
 
   function resetOptions() {
