@@ -404,8 +404,8 @@
       <span class="cart-total-val" id="cartTotalVal">$0.00</span>
     </div>
     <div class="pickup-delivery-label">Choose how to get your order:</div>
-    <button class="fulfillment-btn pickup" onclick="placeOrder('Carryout')">Carryout</button>
-    <button class="fulfillment-btn delivery" onclick="placeOrder('Delivery')">Delivery</button>
+    <button class="fulfillment-btn pickup" onclick="placeOrder('Carryout', '/order/carryout/carryout-info.html')">Carryout</button>
+    <button class="fulfillment-btn delivery" onclick="placeOrder('Delivery', '/order/delivery/delivery.html')">Delivery</button>
   </div>
 </div>
 
@@ -541,17 +541,11 @@
   function openCart() { document.getElementById('cartPage').classList.add('open'); }
   function closeCart() { document.getElementById('cartPage').classList.remove('open'); }
 
-  function placeOrder(method) {
-    showToast(method + ' order placed! 🎉');
-    cartItems.length = 0;
-    updateCartBadge();
-    renderCartItems();
-    if (method === 'Carryout') {
-    setTimeout(() => { window.location.href = '/order/carryout/carryout-info.html'; }, 1200);
-  } else {
-    setTimeout(() => { window.location.href = '/order/delivery.html'; }, 1200);
-  }
-  }
+  function placeOrder(method, url) {
+    // store cart data
+    sessionStorage.setItem('cartItems', JSON.stringify(cartItems));
+    window.location.href = url;
+}
 
   function resetOptions() {
     document.querySelectorAll('[data-group="bun"]').forEach((r, i) => r.classList.toggle('selected', i === 0));
