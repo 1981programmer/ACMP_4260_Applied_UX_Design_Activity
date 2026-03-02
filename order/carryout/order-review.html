@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Happy Burger – Review Your Order</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Boogaloo&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../css/carryout-shared.css" />
+</head>
+<body>
+
+  <div class="page-wrapper">
+    <div class="card">
+
+      <!-- ═══ LOGO ═══════════════════════════════════════════
+           When the real logo image is ready, replace the emoji
+           span with an <img> tag like this:
+           <img class="logo-img" src="../../images/happy-burger-logo.png" alt="Happy Burger" />
+           ═══════════════════════════════════════════════════ -->
+      <div class="logo-area">
+        <span style="font-size:1.6rem;">🍔</span>
+        <span class="logo-text">Happy Burger</span>
+      </div>
+
+      <div class="page-title">Please Review Your Order</div>
+
+      <!-- Step progress: Step 2 of 3 -->
+      <div class="step-indicator">
+        <div class="step-dot done"></div>
+        <div class="step-dot active"></div>
+        <div class="step-dot"></div>
+      </div>
+
+      <!-- Two-column body filled by JS -->
+      <div class="two-col">
+
+        <!-- Left: carry-out details -->
+        <div>
+          <div class="section-label">Carry-Out Details</div>
+          <div class="info-field">
+            <span class="form-label">Name</span>
+            <div class="info-value" id="review-name"></div>
+          </div>
+          <div class="info-field">
+            <span class="form-label">Email</span>
+            <div class="info-value" id="review-email"></div>
+          </div>
+          <div class="info-field">
+            <span class="form-label">Phone</span>
+            <div class="info-value" id="review-phone"></div>
+          </div>
+          <div class="info-field">
+            <span class="form-label">Pickup Time</span>
+            <div class="info-value" id="review-time"></div>
+          </div>
+        </div>
+
+        <!-- Right: order summary -->
+        <div>
+          <div class="section-label">Order Summary</div>
+          <table class="order-table">
+            <tbody id="order-items"></tbody>
+            <tfoot>
+              <tr class="subtotal-row">
+                <td>Subtotal</td>
+                <td id="review-subtotal"></td>
+              </tr>
+              <tr class="tax-row">
+                <td>Tax (8.5%)</td>
+                <td id="review-tax"></td>
+              </tr>
+              <tr class="total-row">
+                <td>TOTAL</td>
+                <td id="review-total"></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
+      </div>
+
+      <!-- Navigation -->
+      <div class="btn-row">
+        <button class="btn btn-back"    onclick="window.location.href='carryout-info.html'">← Go Back</button>
+        <button class="btn btn-primary" onclick="placeOrder()">Place Order 🍔</button>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const TAX_RATE = 0.085;
+
+    // ── Load data from sessionStorage ────────────────────────
+    const info = JSON.parse(sessionStorage.getItem('customerInfo') || '{}');
+    const cart = JSON.parse(sessionStorage.getItem('cart') || '[]');
+
+    // Guard: redirect back if no customer info is found
+    if (!info.firstName) window.location.href = 'carryout-info.html';
+
+    // ── Populate carry-out details ────────────────────────────
+    document.getElementById('review-name').textContent  = info.firstName + ' ' + info.lastName;
+    document.getElementById('review-email').textContent = info.email;
+    document.getElementById('review-phone').textContent = info.phone;
+    document.getElementById('review-time').textContent  = info.pickupTime;
+
+    // ── Populate order summary ────────────────────────────────
+    function fmt(n) { return '$' + n.toFixed(2); }
+
+    const tbody = document.getElementById('order-items');
+    cart.forEach(item => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${item.name}</td><td>${fmt(item.cost)}</td>`;
+      tbody.appendChild(tr);
+    });
+
+    const subtotal = cart.reduce((sum, item) => sum + item.cost, 0);
+    const tax      = subtotal * TAX_RATE;
+    const total    = subtotal + tax;
+
+    document.getElementById('review-subtotal').textContent = fmt(subtotal);
+    document.getElementById('review-tax').textContent      = fmt(tax);
+    document.getElementById('review-total').textContent    = fmt(total);
+
+    // ── Place order ───────────────────────────────────────────
+    function placeOrder() {
+      const confirmId = 'HB-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+      sessionStorage.setItem('confirmationId', confirmId);
+      window.location.href = 'order-complete.html';
+    }
+  </script>
+
+</body>
+</html>

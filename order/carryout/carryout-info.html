@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Happy Burger – Carry-Out Information</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Boogaloo&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../css/carryout-shared.css" />
+  <style>
+    /* Later time dropdown row */
+    #later-time-row {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      margin-top: 8px;
+    }
+    #later-time-row.visible { display: flex; }
+  </style>
+</head>
+<body>
+
+  <div class="page-wrapper">
+    <div class="card">
+
+      <!-- ═══ LOGO ═══════════════════════════════════════════
+           When the real logo image is ready, replace the emoji
+           span with an <img> tag like this:
+           <img class="logo-img" src="../../images/happy-burger-logo.png" alt="Happy Burger" />
+           ═══════════════════════════════════════════════════ -->
+      <div class="logo-area">
+        <span style="font-size:1.6rem;">🍔</span>
+        <span class="logo-text">Happy Burger</span>
+      </div>
+
+      <div class="page-title">Carry-Out Information</div>
+
+      <!-- Step progress: Step 1 of 3 -->
+      <div class="step-indicator">
+        <div class="step-dot active"></div>
+        <div class="step-dot"></div>
+        <div class="step-dot"></div>
+      </div>
+
+      <!-- Name fields side by side to save vertical space -->
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+        <div class="form-group">
+          <label class="form-label" for="firstName">First Name</label>
+          <input class="form-input" type="text" id="firstName" placeholder="Jane" />
+          <div class="error-text" id="err-firstName"></div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="lastName">Last Name</label>
+          <input class="form-input" type="text" id="lastName" placeholder="Smith" />
+          <div class="error-text" id="err-lastName"></div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="email">Email Address</label>
+        <input class="form-input" type="email" id="email" placeholder="jane@email.com" />
+        <div class="error-text" id="err-email"></div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="phone">Phone Number</label>
+        <input class="form-input" type="tel" id="phone" placeholder="(555) 867-5309" />
+        <div class="error-text" id="err-phone"></div>
+      </div>
+
+      <!-- Order time toggle -->
+      <div class="form-group">
+        <div class="time-row">
+          <label>Order Time:</label>
+          <div class="toggle-group">
+            <button class="toggle-btn selected" id="btn-now"   onclick="selectTime('now')">Now</button>
+            <button class="toggle-btn"          id="btn-later" onclick="selectTime('later')">Later</button>
+          </div>
+        </div>
+
+        <!-- Pickup time dropdown – only visible when Later is selected -->
+        <div id="later-time-row">
+          <label class="form-label" style="margin:0;" for="pickupTime">Pickup Time:</label>
+          <select class="form-select" id="pickupTime">
+            <option value="">Select a time</option>
+            <option>12:00 PM</option><option>12:15 PM</option>
+            <option>12:30 PM</option><option>12:45 PM</option>
+            <option>1:00 PM</option><option>1:15 PM</option>
+            <option>1:30 PM</option><option>1:45 PM</option>
+            <option>2:00 PM</option><option>2:15 PM</option>
+            <option>2:30 PM</option><option>2:45 PM</option>
+            <option>3:00 PM</option><option>3:15 PM</option>
+            <option>3:30 PM</option><option>3:45 PM</option>
+            <option>4:00 PM</option><option>4:15 PM</option>
+            <option>4:30 PM</option><option>4:45 PM</option>
+            <option>5:00 PM</option><option>5:15 PM</option>
+            <option>5:30 PM</option><option>5:45 PM</option>
+            <option>6:00 PM</option><option>6:15 PM</option>
+            <option>6:30 PM</option><option>6:45 PM</option>
+          </select>
+        </div>
+        <div class="error-text" id="err-time"></div>
+      </div>
+
+      <!-- Navigation -->
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="handleNext()">Review Order →</button>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // ── Time toggle ───────────────────────────────────────────
+    function selectTime(choice) {
+      const isNow = choice === 'now';
+      document.getElementById('btn-now').classList.toggle('selected', isNow);
+      document.getElementById('btn-later').classList.toggle('selected', !isNow);
+      document.getElementById('later-time-row').classList.toggle('visible', !isNow);
+    }
+
+    // ── Validation helpers ────────────────────────────────────
+    function showError(id, msg) {
+      document.getElementById('err-' + id).textContent = msg;
+    }
+    function clearErrors() {
+      ['firstName','lastName','email','phone','time'].forEach(id => showError(id, ''));
+      document.querySelectorAll('.form-input').forEach(el => el.classList.remove('error'));
+    }
+    function markError(fieldId, msg) {
+      showError(fieldId, msg);
+      const input = document.getElementById(fieldId);
+      if (input) input.classList.add('error');
+    }
+
+    function validate() {
+      let valid = true;
+      const firstName = document.getElementById('firstName').value.trim();
+      const lastName  = document.getElementById('lastName').value.trim();
+      const email     = document.getElementById('email').value.trim();
+      const phone     = document.getElementById('phone').value.trim();
+      const isLater   = document.getElementById('btn-later').classList.contains('selected');
+      const time      = document.getElementById('pickupTime').value;
+
+      if (!firstName) { markError('firstName', 'Required.'); valid = false; }
+      if (!lastName)  { markError('lastName',  'Required.'); valid = false; }
+      if (!email || !/\S+@\S+\.\S+/.test(email)) {
+        markError('email', 'Valid email required.'); valid = false;
+      }
+      if (!phone || phone.replace(/\D/g,'').length < 10) {
+        markError('phone', 'Valid 10-digit number required.'); valid = false;
+      }
+      if (isLater && !time) {
+        showError('time', 'Please select a pickup time.'); valid = false;
+      }
+      return valid;
+    }
+
+    // ── Save to sessionStorage and navigate ──────────────────
+    function handleNext() {
+      clearErrors();
+      if (!validate()) return;
+
+      const isLater = document.getElementById('btn-later').classList.contains('selected');
+      const info = {
+        firstName:  document.getElementById('firstName').value.trim(),
+        lastName:   document.getElementById('lastName').value.trim(),
+        email:      document.getElementById('email').value.trim(),
+        phone:      document.getElementById('phone').value.trim(),
+        orderNow:   !isLater,
+        pickupTime: isLater ? document.getElementById('pickupTime').value : 'ASAP',
+      };
+
+      sessionStorage.setItem('customerInfo', JSON.stringify(info));
+      window.location.href = 'order-review.html';
+    }
+  </script>
+
+</body>
+</html>

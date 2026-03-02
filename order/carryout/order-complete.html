@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Happy Burger – Order Confirmed!</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Boogaloo&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../css/carryout-shared.css" />
+  <style>
+    .success-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+    .success-icon {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, #4caf50, #81c784);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      color: #fff;
+      font-weight: 900;
+      box-shadow: 0 4px 12px rgba(76,175,80,0.4);
+      animation: pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      flex-shrink: 0;
+    }
+    @keyframes pop {
+      0%   { transform: scale(0); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .success-title {
+      font-family: 'Boogaloo', cursive;
+      font-size: 1.25rem;
+      color: #3d1a00;
+    }
+    .confirmation-badge {
+      background: #3d1a00;
+      color: #ffba08;
+      border-radius: 8px;
+      padding: 6px 18px;
+      font-family: 'Boogaloo', cursive;
+      font-size: 0.95rem;
+      text-align: center;
+      margin-bottom: 10px;
+      letter-spacing: 1px;
+      display: inline-block;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-wrapper">
+    <div class="card">
+
+      <!-- ═══ LOGO ═══════════════════════════════════════════
+           When the real logo image is ready, replace the emoji
+           span with an <img> tag like this:
+           <img class="logo-img" src="../../images/happy-burger-logo.png" alt="Happy Burger" />
+           ═══════════════════════════════════════════════════ -->
+      <div class="logo-area">
+        <span style="font-size:1.6rem;">🍔</span>
+        <span class="logo-text">Happy Burger</span>
+      </div>
+
+      <!-- Success header with inline checkmark -->
+      <div class="success-header">
+        <div class="success-icon">✓</div>
+        <div class="success-title">Your Order Has Been Placed!</div>
+      </div>
+
+      <!-- Confirmation badge -->
+      <div class="confirmation-badge" id="confirm-badge"></div>
+
+      <!-- Step progress: all three done -->
+      <div class="step-indicator">
+        <div class="step-dot done"></div>
+        <div class="step-dot done"></div>
+        <div class="step-dot done"></div>
+      </div>
+
+      <!-- Two-column summary filled by JS -->
+      <div class="two-col">
+
+        <!-- Left: carry-out details -->
+        <div>
+          <div class="section-label">Carry-Out Details</div>
+          <div class="info-field">
+            <span class="form-label">Name</span>
+            <div class="info-value" id="confirm-name"></div>
+          </div>
+          <div class="info-field">
+            <span class="form-label">Email</span>
+            <div class="info-value" id="confirm-email"></div>
+          </div>
+          <div class="info-field">
+            <span class="form-label">Phone</span>
+            <div class="info-value" id="confirm-phone"></div>
+          </div>
+          <div class="info-field">
+            <span class="form-label">Pickup Time</span>
+            <div class="info-value" id="confirm-time"></div>
+          </div>
+        </div>
+
+        <!-- Right: order summary -->
+        <div>
+          <div class="section-label">Order Summary</div>
+          <table class="order-table">
+            <tbody id="confirm-items"></tbody>
+            <tfoot>
+              <tr class="subtotal-row">
+                <td>Subtotal</td>
+                <td id="confirm-subtotal"></td>
+              </tr>
+              <tr class="tax-row">
+                <td>Tax (8.5%)</td>
+                <td id="confirm-tax"></td>
+              </tr>
+              <tr class="total-row">
+                <td>TOTAL</td>
+                <td id="confirm-total"></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
+      </div>
+
+      <!-- Navigation -->
+      <div class="btn-row">
+        <button class="btn btn-home" onclick="goHome()">Return to Home 🏠</button>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const TAX_RATE = 0.085;
+
+    // ── Load data from sessionStorage ────────────────────────
+    const info      = JSON.parse(sessionStorage.getItem('customerInfo')  || '{}');
+    const cart      = JSON.parse(sessionStorage.getItem('cart')          || '[]');
+    const confirmId = sessionStorage.getItem('confirmationId') || 'HB-UNKNOWN';
+
+    // Guard: redirect back if no customer info is found
+    if (!info.firstName) window.location.href = 'carryout-info.html';
+
+    // ── Populate confirmation badge ───────────────────────────
+    document.getElementById('confirm-badge').textContent = 'Confirmation #: ' + confirmId;
+
+    // ── Populate carry-out details ────────────────────────────
+    document.getElementById('confirm-name').textContent  = info.firstName + ' ' + info.lastName;
+    document.getElementById('confirm-email').textContent = info.email;
+    document.getElementById('confirm-phone').textContent = info.phone;
+    document.getElementById('confirm-time').textContent  = info.pickupTime;
+
+    // ── Populate order summary ────────────────────────────────
+    function fmt(n) { return '$' + n.toFixed(2); }
+
+    const tbody = document.getElementById('confirm-items');
+    cart.forEach(item => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${item.name}</td><td>${fmt(item.cost)}</td>`;
+      tbody.appendChild(tr);
+    });
+
+    const subtotal = cart.reduce((sum, item) => sum + item.cost, 0);
+    const tax      = subtotal * TAX_RATE;
+    const total    = subtotal + tax;
+
+    document.getElementById('confirm-subtotal').textContent = fmt(subtotal);
+    document.getElementById('confirm-tax').textContent      = fmt(tax);
+    document.getElementById('confirm-total').textContent    = fmt(total);
+
+    // ── Return to home ────────────────────────────────────────
+    function goHome() {
+      sessionStorage.removeItem('customerInfo');
+      sessionStorage.removeItem('cart');
+      sessionStorage.removeItem('confirmationId');
+      // Update this path if your home page filename is different
+      window.location.href = '../../index.html';
+    }
+  </script>
+
+</body>
+</html>
