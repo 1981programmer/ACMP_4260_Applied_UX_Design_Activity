@@ -4,133 +4,277 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Happy Burger – Review Your Order</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Boogaloo&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../../css/carryout-shared.css" />
+  <link rel="stylesheet" href="../../css/home.css" />
+  <style>
+    :root {
+      --brand-red:      #C20830;
+      --brand-red-dark: #880015;
+      --text-dark:  #1a1a1a;
+      --text-mid:   #444;
+      --text-light: #888;
+      --border:     #e0e0e0;
+      --input-bg:   #f5f5f5;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Cambria, 'Hoefler Text', 'Liberation Serif', Times, serif;
+      background: #fff;
+      color: var(--text-dark);
+      min-height: 100vh;
+    }
+
+    /* ── Two-column layout matching checkout.html ── */
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 36px 32px 60px;
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 32px;
+      align-items: start;
+    }
+
+    /* ── Step indicator ── */
+    .steps { display: flex; align-items: center; gap: 8px; margin-bottom: 28px; }
+    .step {
+      width: 28px; height: 28px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700;
+      border: 2px solid var(--border); color: var(--text-light);
+      font-family: Cambria, serif;
+    }
+    .step.active { background: var(--brand-red); border-color: var(--brand-red); color: #fff; }
+    .step.done   { background: var(--text-dark);  border-color: var(--text-dark);  color: #fff; }
+    .step-line { flex: 1; height: 2px; background: var(--border); }
+    .step-line.done { background: var(--text-dark); }
+
+    /* ── Back link ── */
+    .back-link {
+      display: inline-flex; align-items: center; gap: 7px;
+      color: var(--brand-red); font-weight: 600; font-size: 14px;
+      cursor: pointer; margin-bottom: 24px; text-decoration: none;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--brand-red-dark); }
+
+    /* ── Info sections ── */
+    .section { background: #fff; border: 1.5px solid var(--border); overflow: hidden; margin-bottom: 12px; }
+    .section-row {
+      display: grid; grid-template-columns: 160px 1fr;
+      gap: 20px; padding: 20px 24px;
+      border-bottom: 1px solid var(--border); align-items: start;
+    }
+    .section-row:last-child { border-bottom: none; }
+    .section-label { font-weight: 700; font-size: 15px; padding-top: 2px; color: var(--text-dark); }
+    .section-content { display: flex; flex-direction: column; gap: 6px; }
+    .info-line { font-size: 14px; color: var(--text-mid); font-family: sans-serif; }
+    .info-line strong { color: var(--text-dark); font-weight: 600; }
+
+    /* ── Right: Order summary (matches checkout.html) ── */
+    .order-summary {
+      background: #fff; border: 1.5px solid var(--border);
+      overflow: hidden; position: sticky; top: 24px;
+    }
+    .summary-header {
+      padding: 18px 24px; border-bottom: 1px solid var(--border);
+      font-size: 13px; font-weight: 700; letter-spacing: 0.06em;
+      text-transform: uppercase; color: var(--text-light); text-align: center;
+    }
+    .summary-body { padding: 20px 24px; }
+    .summary-line {
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 14px; padding: 6px 0; font-family: sans-serif;
+    }
+    .summary-line .label { color: var(--text-mid); }
+    .summary-line .value { font-weight: 500; }
+    .summary-divider { height: 1px; background: var(--border); margin: 14px 0; }
+    .total-line {
+      display: flex; justify-content: space-between;
+      font-size: 17px; font-weight: 700; padding: 14px 0 10px;
+    }
+    .order-items { border-top: 1px solid var(--border); padding: 16px 24px; }
+    .order-item {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 8px 0; font-size: 13px; border-bottom: 1px solid var(--border);
+      font-family: sans-serif;
+    }
+    .order-item:last-child { border-bottom: none; }
+    .item-qty {
+      background: var(--input-bg); border: 1px solid var(--border);
+      padding: 2px 7px; font-size: 12px; font-weight: 700;
+      margin-right: 8px; color: var(--text-mid);
+    }
+    .item-name { color: var(--text-mid); flex: 1; }
+    .item-price { font-weight: 600; }
+
+    /* ── Place order button ── */
+    .place-order-btn {
+      width: 100%; padding: 15px; background: var(--brand-red); border: none;
+      font-family: Cambria, serif; font-size: 15px; font-weight: 700;
+      color: #fff; cursor: pointer; transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
+      letter-spacing: 0.04em; text-transform: uppercase;
+    }
+    .place-order-btn:hover { background: var(--brand-red-dark); transform: translateY(-1px); box-shadow: 0 4px 14px rgba(194,8,48,0.35); }
+    .place-order-btn:active { transform: translateY(0); }
+
+    /* ── Buttons ── */
+    .btn-group { display: flex; gap: 10px; margin-top: 8px; }
+    .btn { flex: 1; padding: 14px; font-family: Cambria, serif; font-size: 14px; font-weight: 700; cursor: pointer; border: none; transition: all 0.15s; letter-spacing: 0.04em; text-transform: uppercase; }
+    .btn-back-btn { background: #fff; color: var(--text-dark); border: 1.5px solid var(--border); }
+    .btn-back-btn:hover { background: var(--input-bg); }
+
+    @media (max-width: 780px) {
+      .page { grid-template-columns: 1fr; padding: 24px 16px 60px; }
+      .order-summary { position: static; }
+      .section-row { grid-template-columns: 1fr; gap: 8px; }
+    }
+  </style>
 </head>
 <body>
 
-  <div class="page-wrapper">
-    <div class="card">
+<!-- ── Header ── -->
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tbody>
+    <tr><td colspan="8"><img src="../../images/divider.png" style="width:100%;height:3px;display:block;" alt=""></td></tr>
+    <tr>
+      <td width="28" rowspan="2" bgcolor="#FFFFFF">&nbsp;</td>
+      <td width="186" rowspan="2" bgcolor="#FFFFFF">
+        <a href="../../index.html"><img src="../../images/logo_v2.png" width="150" height="100" alt="Happy Burgers" /></a>
+      </td>
+      <td width="282" height="42" bgcolor="#FFFFFF" style="font-size:36px;">&nbsp;</td>
+      <td width="119" bgcolor="#FFFFFF" style="font-size:36px;">&nbsp;</td>
+      <td width="237" bgcolor="#FFFFFF" style="font-size:36px;">&nbsp;</td>
+      <td colspan="2" align="right" valign="bottom" bgcolor="#FFFFFF" style="font-size:24px;color:#C20830;font-family:Cambria,'Hoefler Text','Liberation Serif',Times,serif;"><strong>⌕ SEARCH</strong></td>
+      <td width="41" align="right" valign="bottom" bgcolor="#FFFFFF" style="font-size:24px;">&nbsp;</td>
+    </tr>
+    <tr>
+      <td height="67" align="right" valign="middle" bgcolor="#FFFFFF" style="font-size:30px;font-family:Cambria,'Hoefler Text','Liberation Serif',Times,serif;"><a href="#" class="nav-link full-cell"><strong>LOCATIONS</strong></a></td>
+      <td align="right" valign="middle" bgcolor="#FFFFFF" style="font-size:30px;font-family:Cambria,'Hoefler Text','Liberation Serif',Times,serif;"><a href="../../menu/index.html" class="nav-link full-cell"><strong>MENU</strong></a></td>
+      <td align="right" valign="middle" bgcolor="#FFFFFF" style="font-size:30px;font-family:Cambria,'Hoefler Text','Liberation Serif',Times,serif;"><a href="#" class="nav-link full-cell"><strong>EMPLOYMENT</strong></a></td>
+      <td width="172" align="right" valign="middle" bgcolor="#FFFFFF" style="font-size:30px;font-family:Cambria,'Hoefler Text','Liberation Serif',Times,serif;"><a href="#" class="nav-link full-cell"><strong>HISTORY</strong></a></td>
+      <td width="135" align="right" valign="middle" bgcolor="#FFFFFF" style="font-size:30px;font-family:Cambria,'Hoefler Text','Liberation Serif',Times,serif;"><a href="#" class="nav-link full-cell"><strong>ABOUT</strong></a></td>
+      <td bgcolor="#FFFFFF">&nbsp;</td>
+    </tr>
+    <tr><td height="3" colspan="8"><img src="../../images/divider.png" style="width:100%;height:3px;display:block;" alt=""></td></tr>
+  </tbody>
+</table>
 
-      <!-- ═══ LOGO ═══════════════════════════════════════════
-           When the real logo image is ready, replace the emoji
-           span with an <img> tag like this:
-           <img class="logo-img" src="../../images/happy-burger-logo.png" alt="Happy Burger" />
-           ═══════════════════════════════════════════════════ -->
-      <div class="logo-area">
-        <span style="font-size:1.6rem;">🍔</span>
-        <span class="logo-text">Happy Burger</span>
-      </div>
+<!-- ── Page Content ── -->
+<div class="page">
 
-      <div class="page-title">Please Review Your Order</div>
+  <!-- Left column -->
+  <div class="left-col">
 
-      <!-- Step progress: Step 2 of 3 -->
-      <div class="step-indicator">
-        <div class="step-dot done"></div>
-        <div class="step-dot active"></div>
-        <div class="step-dot"></div>
-      </div>
-
-      <!-- Two-column body filled by JS -->
-      <div class="two-col">
-
-        <!-- Left: carry-out details -->
-        <div>
-          <div class="section-label">Carry-Out Details</div>
-          <div class="info-field">
-            <span class="form-label">Name</span>
-            <div class="info-value" id="review-name"></div>
-          </div>
-          <div class="info-field">
-            <span class="form-label">Email</span>
-            <div class="info-value" id="review-email"></div>
-          </div>
-          <div class="info-field">
-            <span class="form-label">Phone</span>
-            <div class="info-value" id="review-phone"></div>
-          </div>
-          <div class="info-field">
-            <span class="form-label">Pickup Time</span>
-            <div class="info-value" id="review-time"></div>
-          </div>
-        </div>
-
-        <!-- Right: order summary -->
-        <div>
-          <div class="section-label">Order Summary</div>
-          <table class="order-table">
-            <tbody id="order-items"></tbody>
-            <tfoot>
-              <tr class="subtotal-row">
-                <td>Subtotal</td>
-                <td id="review-subtotal"></td>
-              </tr>
-              <tr class="tax-row">
-                <td>Tax (8.5%)</td>
-                <td id="review-tax"></td>
-              </tr>
-              <tr class="total-row">
-                <td>TOTAL</td>
-                <td id="review-total"></td>
-              </tr>
-            </tfoot>
-          </table>
-        </div>
-
-      </div>
-
-      <!-- Navigation -->
-      <div class="btn-row">
-        <button class="btn btn-back"    onclick="window.location.href='carryout-info.html'">← Go Back</button>
-        <button class="btn btn-primary" onclick="placeOrder()">Place Order 🍔</button>
-      </div>
-
+    <div class="steps">
+      <div class="step done">&#10003;</div>
+      <div class="step-line done"></div>
+      <div class="step active">2</div>
+      <div class="step-line"></div>
+      <div class="step">3</div>
     </div>
+
+    <a class="back-link" href="carryout-info.html">&#8592; Back to carry-out info</a>
+
+    <!-- Carry-out details -->
+    <div class="section">
+      <div class="section-row">
+        <div class="section-label">Your Details</div>
+        <div class="section-content">
+          <div class="info-line"><strong>Name:</strong> <span id="review-name"></span></div>
+          <div class="info-line"><strong>Email:</strong> <span id="review-email"></span></div>
+          <div class="info-line"><strong>Phone:</strong> <span id="review-phone"></span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pickup time -->
+    <div class="section">
+      <div class="section-row">
+        <div class="section-label">Pickup Time</div>
+        <div class="section-content">
+          <div class="info-line" id="review-time"></div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
-  <script>
-    const TAX_RATE = 0.085;
+  <!-- Right column: Order summary -->
+  <div class="order-summary">
+    <div class="summary-header">Order Summary</div>
+    <div class="summary-body">
+      <div class="summary-line">
+        <span class="label">Subtotal</span>
+        <span class="value" id="review-subtotal"></span>
+      </div>
+      <div class="summary-line">
+        <span class="label">Tax (8.5%)</span>
+        <span class="value" id="review-tax"></span>
+      </div>
+      <div class="summary-divider"></div>
+      <div class="total-line">
+        <span>Total</span>
+        <span id="review-total"></span>
+      </div>
+      <button class="place-order-btn" onclick="placeOrder()">Place Order</button>
+    </div>
+    <div class="order-items" id="order-items-list"></div>
+  </div>
 
-    // ── Load data from sessionStorage ────────────────────────
-    const info = JSON.parse(sessionStorage.getItem('customerInfo') || '{}');
-    const cart = JSON.parse(sessionStorage.getItem('cart') || '[]');
+</div>
 
-    // Guard: redirect back if no customer info is found
-    if (!info.firstName) window.location.href = 'carryout-info.html';
+<!-- ── Footer ── -->
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tbody>
+    <tr>
+      <td width="14%" height="26" bgcolor="#000000" style="text-align:center;"><a href="" target="_blank" style="color:#FFFFFF;">Associate Link</a></td>
+      <td width="21%" bgcolor="#000000" style="text-align:center;"><a href="" style="color:#FFFFFF;">Transparency Supply Chain</a></td>
+      <td width="14%" bgcolor="#000000" style="text-align:center;"><a href="" style="color:#FFFFFF;">Privacy Policy</a></td>
+      <td width="16%" bgcolor="#000000" style="text-align:center;"><a href="" style="color:#FFFFFF;">Terms &amp; Conditions</a></td>
+      <td width="12%" bgcolor="#000000" style="text-align:center;"><a href="" style="color:#FFFFFF;">Accessibility</a></td>
+      <td width="26%" bgcolor="#000000" style="text-align:center;color:#D4D4D4;">&copy; 2026 Happy Burgers</td>
+    </tr>
+  </tbody>
+</table>
 
-    // ── Populate carry-out details ────────────────────────────
-    document.getElementById('review-name').textContent  = info.firstName + ' ' + info.lastName;
-    document.getElementById('review-email').textContent = info.email;
-    document.getElementById('review-phone').textContent = info.phone;
-    document.getElementById('review-time').textContent  = info.pickupTime;
+<script>
+  const TAX_RATE = 0.085;
+  const info = JSON.parse(sessionStorage.getItem('customerInfo') || '{}');
+  const cart = JSON.parse(sessionStorage.getItem('cart') || '[]');
 
-    // ── Populate order summary ────────────────────────────────
-    function fmt(n) { return '$' + n.toFixed(2); }
+  if (!info.firstName) window.location.href = 'carryout-info.html';
 
-    const tbody = document.getElementById('order-items');
-    cart.forEach(item => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `<td>${item.name}</td><td>${fmt(item.cost)}</td>`;
-      tbody.appendChild(tr);
-    });
+  document.getElementById('review-name').textContent  = info.firstName + ' ' + info.lastName;
+  document.getElementById('review-email').textContent = info.email;
+  document.getElementById('review-phone').textContent = info.phone;
+  document.getElementById('review-time').textContent  = info.pickupTime;
 
-    const subtotal = cart.reduce((sum, item) => sum + item.cost, 0);
-    const tax      = subtotal * TAX_RATE;
-    const total    = subtotal + tax;
+  function fmt(n) { return '$' + n.toFixed(2); }
 
-    document.getElementById('review-subtotal').textContent = fmt(subtotal);
-    document.getElementById('review-tax').textContent      = fmt(tax);
-    document.getElementById('review-total').textContent    = fmt(total);
+  const listEl = document.getElementById('order-items-list');
+  cart.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'order-item';
+    div.innerHTML = `<span class="item-qty">1&times;</span><span class="item-name">${item.name}</span><span class="item-price">${fmt(item.cost)}</span>`;
+    listEl.appendChild(div);
+  });
 
-    // ── Place order ───────────────────────────────────────────
-    function placeOrder() {
-      const confirmId = 'HB-' + Math.random().toString(36).substring(2, 8).toUpperCase();
-      sessionStorage.setItem('confirmationId', confirmId);
-      window.location.href = 'order-complete.html';
-    }
-  </script>
+  const subtotal = cart.reduce((s, i) => s + i.cost, 0);
+  const tax      = subtotal * TAX_RATE;
+  const total    = subtotal + tax;
+
+  document.getElementById('review-subtotal').textContent = fmt(subtotal);
+  document.getElementById('review-tax').textContent      = fmt(tax);
+  document.getElementById('review-total').textContent    = fmt(total);
+
+  function placeOrder() {
+    const confirmId = 'HB-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+    sessionStorage.setItem('confirmationId', confirmId);
+    window.location.href = 'order-complete.html';
+  }
+</script>
 
 </body>
 </html>
